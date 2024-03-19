@@ -19,16 +19,16 @@ public class CourseController {
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public String showCourses(Model model) {
         model.addAttribute("courses", courseService.getAllCourses());
-        return "course_list";
+        return "courses/index";
     }
 
     @GetMapping("/create_course")
     public String showCreateCourseForm(Model model) {
         model.addAttribute("course", new Course());
-        return "create_course";
+        return "courses/create_course";
     }
 
     @PostMapping("/create_course")

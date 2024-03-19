@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student List</title>
     <link rel="stylesheet" href="css/students.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 </head>
 <body>
 <div class="container">
-    <h1>Student List</h1>
-    <button id="addStudentBtn" class="add-btn">Add Student</button>
+    <div class="section-header">
+        <h1>Student List</h1>
+        <button id="addStudentBtn" class="add-btn">Add Student</button>
+    </div>
     <div id="addStudentModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -17,11 +22,11 @@
             <form id="addStudentForm" action="/addStudent" method="post">
                 <div>
                     <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" name="first_name" required>
+                    <input type="text" id="firstName" name="firstName" required>
                 </div>
                 <div>
                     <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" name="last_name" required>
+                    <input type="text" id="lastName" name="lastName" required>
                 </div>
                 <div>
                     <label for="email">Email:</label>
@@ -41,26 +46,99 @@
             </form>
         </div>
     </div>
+    <form th:action="@{/students}" method="get" class="filter-form">
+        <div class="row">
+            <div class="col">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" th:value="${firstName}" name="firstName" class="form-control" placeholder="First Name">
+            </div>
+            <div class="col">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" th:value="${lastName}" name="lastName" class="form-control" placeholder="Last Name">
+            </div>
+            <div class="col">
+                <label for="courseId">Course:</label>
+                <select style="padding: 8px;" id="courseId" name="courseId" class="form-control">
+                    <option value="">-- Select Course --</option>
+                    <option th:selected="${course.id == courseId}" th:each="course : ${courses}" th:value="${course.id}" th:text="${course.title}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="email">Email:</label>
+                <input type="text" id="email" th:value="${email}" name="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="col">
+                <label for="age">Age:</label>
+                <input type="number" id="age" th:value="${age}" name="age" class="form-control" placeholder="Age">
+            </div>
+            <div class="col" style="display: flex; align-items: end;">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+    </form>
+
     <div class="student-table">
         <div class="header-row">
-            <div class="cell">ID</div>
-            <div class="cell">First Name</div>
-            <div class="cell">Last Name</div>
-            <div class="cell">Email</div>
-            <div class="cell">Age</div>
+            <div class="cell">
+                <a th:href="@{/students(sortBy=id, direction=${sortBy == 'id' ? (direction == 'asc' ? 'desc' : 'asc') : 'asc'}
+                )}">
+                    ID
+                    <span>
+                <i th:class="${sortBy == 'id' ? (direction == 'asc' ? 'fas fa-chevron-up' : 'fas fa-chevron-down') : ''}"></i>
+            </span>
+                </a>
+            </div>
+            <div class="cell">
+                <a th:href="@{/students(sortBy=firstName, direction=${sortBy == 'firstName' ? (direction == 'asc' ? 'desc' : 'asc') : 'asc'})}">
+                    First Name
+                    <span>
+                <i th:class="${sortBy == 'firstName' ? (direction == 'asc' ? 'fas fa-chevron-up' : 'fas fa-chevron-down') : ''}"></i>
+            </span>
+                </a>
+            </div>
+            <div class="cell">
+                <a th:href="@{/students(sortBy=lastName, direction=${sortBy == 'lastName' ? (direction == 'asc' ? 'desc' : 'asc') : 'asc'})}">
+                    Last Name
+                    <span>
+                <i th:class="${sortBy == 'lastName' ? (direction == 'asc' ? 'fas fa-chevron-up' : 'fas fa-chevron-down') : ''}"></i>
+            </span>
+                </a>
+            </div>
+            <div class="cell">
+                <a th:href="@{/students(sortBy=email, direction=${sortBy == 'email' ? (direction == 'asc' ? 'desc' : 'asc') : 'asc'})}">
+                    Email
+                    <span>
+                <i th:class="${sortBy == 'email' ? (direction == 'asc' ? 'fas fa-chevron-up' : 'fas fa-chevron-down') : ''}"></i>
+            </span>
+                </a>
+            </div>
+            <div class="cell">
+                <a th:href="@{/students(sortBy=age, direction=${sortBy == 'age' ? (direction == 'asc' ? 'desc' : 'asc') : 'asc'})}">
+                    Age
+                    <span>
+                <i th:class="${sortBy == 'age' ? (direction == 'asc' ? 'fas fa-chevron-up' : 'fas fa-chevron-down') : ''}"></i>
+            </span>
+                </a>
+            </div>
             <div class="cell">Actions</div>
         </div>
+
+
         <div th:each="student : ${students}" class="data-row">
             <div class="cell" th:text="${student.id}"></div>
-            <div class="cell" th:text="${student.first_name}"></div>
-            <div class="cell" th:text="${student.last_name}"></div>
+            <div class="cell" th:text="${student.firstName}"></div>
+            <div class="cell" th:text="${student.lastName}"></div>
             <div class="cell" th:text="${student.email}"></div>
             <div class="cell" th:text="${student.age}"></div>
             <div class="cell">
-                <button th:onclick="openEditModal([[${student.id}]],[[${student.first_name}]],[[${student.last_name}]],[[${student.email}]],[[${student.age}]])">Update</button>
+                <button th:onclick="openEditModal([[${student.id}]],[[${student.firstName}]],[[${student.lastName}]],[[${student.email}]],[[${student.age}]])">Update</button>
                 <button th:onclick="openDeleteModal([[${student.id}]])">Delete</button>
             </div>
         </div>
+    </div>
+    <div>
     </div>
     <div id="editStudentModal" class="modal">
         <div class="modal-content">
@@ -82,7 +160,24 @@
             </form>
         </div>
     </div>
+    <!-- Pagination -->
+    <div style="display:flex;justify-content: center;">
+        <ul class="pagination modal-2" th:if="${totalPages > 1}">
+            <li>
+                <a th:href="@{/students(page=0,sortBy=${sortBy},direction=${direction})}" class="prev">&laquo;</a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(currentPage > 2 ? currentPage - 2 : 0, currentPage + 2 > totalPages - 1 ? totalPages - 1 : currentPage + 2)}">
+                <a th:href="@{/students(page=${page},sortBy=${sortBy},direction=${direction})}" th:class="${currentPage == page ? 'active' : ''}" th:text="${page + 1}"></a>
+            </li>
+            <li>
+                <a th:href="@{/students(page=${totalPages - 1},sortBy=${sortBy},direction=${direction})}" class="next">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+
 </div>
+
+
 <script src="js/index.js"></script>
 </body>
 </html>

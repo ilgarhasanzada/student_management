@@ -2,11 +2,12 @@ var addStudentBtn = document.getElementById("addStudentBtn");
 var addStudentModal = document.getElementById("addStudentModal");
 var closeBtns = document.querySelectorAll(".close");
 var deleteStudentModal = document.getElementById("deleteStudentModal");
-
+var editStudentModal = document.getElementById("editStudentModal");
 closeBtns.forEach(function(btn) {
     btn.onclick = function() {
         addStudentModal.style.display = "none";
         deleteStudentModal.style.display = "none";
+        editStudentModal.style.display = "none";
     }
 });
 
@@ -14,9 +15,7 @@ addStudentBtn.onclick = function() {
     addStudentModal.style.display = "block";
 }
 
-closeBtn.onclick = function() {
-    addStudentModal.style.display = "none";
-}
+
 
 window.onclick = function(event) {
     if (event.target == addStudentModal) {
@@ -32,8 +31,8 @@ function openDeleteModal(id) {
 
 function openEditModal(id, firstName, lastName, email, age) {
     var editForm = document.getElementById("editStudentForm");
-    // editForm.setAttribute("action", "/updateStudent?id=" + id);
-    editForm.setAttribute("action", "/updateStudent");
+     editForm.setAttribute("action", "/updateStudent/" + id);
+//    editForm.setAttribute("action", "/updateStudent");
 
     editForm.innerHTML = `
         <input type="hidden" name="id" value="${id}">

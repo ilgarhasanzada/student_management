@@ -8,14 +8,13 @@
 <body>
 <div class="container">
     <h1>Course List</h1>
-    <a th:href="@{/create_course}" class="btn btn-primary mb-3">Create New Course</a>
+    <a th:href="@{/courses/create_course}" class="btn btn-primary mb-3">Create New Course</a>
     <ul class="list-group">
         <li class="list-group-item" th:each="course : ${courses}">
             <span th:text="${course.title}"></span>
             <a th:href="@{/add_student/{id}(id=${course.id})}" class="btn btn-secondary btn-sm float-right">Add Student</a>
         </li>
     </ul>
-    salam sen necesen dsad
 </div>
 <script th:if="${@environment.acceptsProfiles('dev','local')}" src="http://localhost:35729/livereload.js"></script>
 
